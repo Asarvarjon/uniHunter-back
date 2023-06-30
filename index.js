@@ -2,6 +2,7 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const authRoutes = require('./routes/authRoutes');
+const vacancyRoutes = require('./routes/vacancyRoutes')
 const companyRoutes = require('./routes/companyRoutes');
 const cors = require('cors')
 
@@ -16,6 +17,7 @@ app.use(cors())
 
 app.use(authRoutes);
 app.use(companyRoutes);
+app.use(vacancyRoutes)
 
 const PORT = 8830;
 const dbURI = "mongodb+srv://isa:77ruIwO0WFRsdQ7J@cluster0.fhtwa.mongodb.net/?retryWrites=true&w=majority";
