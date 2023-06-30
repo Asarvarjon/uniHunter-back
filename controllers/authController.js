@@ -39,10 +39,10 @@ module.exports.signup_get = (req, res) => {
 }
 
 module.exports.signup_post = async (req, res) => {
-    const { email, password, name, surname } = req.body;
+    const { email, password, name, surname, uni_name } = req.body;
     try {
         const user = await User.create({
-            email, password, name, surname
+            email, password, name, surname, uni_name
         });
 
         const token = createToken(user._id);

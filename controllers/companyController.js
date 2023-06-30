@@ -35,10 +35,10 @@ const handleErrors = err => {
 }
 
 module.exports.signup_post = async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password, name_of_company } = req.body;
     try {
         const company = await Company.create({
-            email, password
+            email, password, name_of_company
         });
         const token = createToken(company._id);
 
