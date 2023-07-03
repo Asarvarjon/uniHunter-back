@@ -3,7 +3,7 @@ const User = require('../models/User');
 const Company = require('../models/Company');
 
 const requireAuth = (req, res, next) => {
-    const token = req.cookies.jwt;
+    const token = req.headers.cookies.jwt;
 
     if(token) {
         jwt.verify(token, 'secret', (err, decodedToken) => {
@@ -19,7 +19,7 @@ const requireAuth = (req, res, next) => {
 };
 
 const checkUser = (req, res, next) => {
-    const token = req.cookies.jwt;
+    const token = req.headers.cookies.jwt;
 
     if (token) {
         jwt.verify(token, 'secret', async (err, decodedToken) => {
@@ -39,7 +39,7 @@ const checkUser = (req, res, next) => {
 }
 
 const checkCompany = (req, res, next) => {
-    const token = req.cookies.jwt;
+    const token = req.headers.cookies.jwt;
 
     if (token) {
         jwt.verify(token, 'secret', async (err, decodedToken) => {
