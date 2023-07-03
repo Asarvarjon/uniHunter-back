@@ -8,6 +8,12 @@ const vacancySchema = new mongoose.Schema({
     responsibilities: {
         type: String,   
     },
+    description: {
+        type: String,   
+    },
+    requirements: {
+        type: String,   
+    },
     employment_conditions: { 
         type: String,  
     },
