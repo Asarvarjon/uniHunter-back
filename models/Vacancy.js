@@ -1,9 +1,11 @@
 const mongoose = require('mongoose'); 
 
 const vacancySchema = new mongoose.Schema({
+    name: {
+        type: String,
+    },
     salary: {
-        type: Number, 
-        unique: true, 
+        type: Number,  
     },
     responsibilities: {
         type: String,   

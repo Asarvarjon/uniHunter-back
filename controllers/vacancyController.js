@@ -8,23 +8,27 @@ module.exports.create_vacancy = async (req, res) => {
         employment_conditions,
         responsibilities,
         requirements,
-        salary
-    } = req.body;
-    const vacancy = await Vacancy.findById({_id: res.locals.company.id});
+        description,
+        salary,
+        name
+    } = req.body; 
 
-    vacancy.set({
+    const new_vacancy = await Vacancy.create({
         job_type,
         work_experience,
         employment_conditions,
         description,
         responsibilities,
+        requirements,
+        description,
         salary,
-        company_id: company._id
+        name
+        // company_id: res.locals.company._id
     });
+    console.log(new_vacancy)
+    
 
-    vacancy.save()
-
-    res.send({vacancy})
+    res.send({new_vacancy})
 }
 
 
@@ -34,18 +38,19 @@ module.exports.get_vacancies = async (req, res) => {
 
     if(query && Object.keys(query).length){  
         for (let key in query){
-            if(query[key].toLowerCase()){
+            if(key != 'keyword' && query[key].toLowerCase()){
                 filter_options[`${key}`] = query[key]
             }
         }
 
-        if (filter_options.keyword) {
+        console.log(filter_options.keyword)
+
+        if (query.keyword) {
             // Use a regular expression to perform a case-insensitive search
-            filter_options.keyword = { $regex: keyword, $options: "i" };
+            filter_options['name'] = { $regex: query.keyword, $options: "i" };
         }
     };
-
-
+ 
     
     const vacancies = await Vacancy.find(filter_options)
 
