@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(cors( {
     origin: ['http://localhost:3000', 'https://unisearchapp.netlify.app/'], // Add the origins you want to allow
     credentials: true, // Allow credentials (e.g., cookies, HTTP authentication)
-  ))
+ } ))
 
 app.use(authRoutes);
 app.use(companyRoutes);
