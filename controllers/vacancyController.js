@@ -25,7 +25,7 @@ module.exports.create_vacancy = async (req, res) => {
         description,
         salary,
         name,
-        company_id: res.locals.company?._id
+        company_id: res.locals.company ? res.locals.company._id : null,
     });
     console.log(new_vacancy)
     
