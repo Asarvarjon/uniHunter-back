@@ -13,6 +13,8 @@ module.exports.create_vacancy = async (req, res) => {
         name
     } = req.body; 
 
+    console.log(res.locals)
+
     const new_vacancy = await Vacancy.create({
         job_type,
         work_experience,
@@ -23,7 +25,7 @@ module.exports.create_vacancy = async (req, res) => {
         description,
         salary,
         name,
-        company_id: res.locals.company._id
+        company_id: res.locals.company?._id
     });
     console.log(new_vacancy)
     
