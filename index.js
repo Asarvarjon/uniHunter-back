@@ -4,7 +4,10 @@ const mongoose = require('mongoose');
 const authRoutes = require('./routes/authRoutes');
 const vacancyRoutes = require('./routes/vacancyRoutes')
 const companyRoutes = require('./routes/companyRoutes');
+// const messageRoutes  = require('./routes/messageRoutes');
 const cors = require('cors')
+// const { Server } = require("socket.io");
+// const socket = require("./modules/socket");
 
 const { requireAuth, checkUser } = require('./middlewares/authMiddlewares');
 
@@ -14,13 +17,14 @@ app.use(cookieParser());
 
 app.use(express.json());
 app.use(cors({
-     origin: ['http://localhost:3000', 'https://unisearchapp.netlify.app'], // Add the origins you want to allow
+     origin: ['http://localhost:3000', 'https://unisearchapp.netlify.app', 'https://checkinguni.netlify.app'], // Add the origins you want to allow
         credentials: true, // Allow credentials (e.g., cookies, HTTP authentication)
     }))
 
 app.use(authRoutes);
 app.use(companyRoutes);
 app.use(vacancyRoutes)
+// app.use(messageRoutes)
 
 const PORT = 8830;
 const dbURI = "mongodb+srv://isa:77ruIwO0WFRsdQ7J@cluster0.fhtwa.mongodb.net/?retryWrites=true&w=majority";
@@ -35,6 +39,13 @@ mongoose.connect(dbURI, {
 .catch((err) => {
     console.log(err);
 })
+
+
+// const io = new Server(httpServer);
+
+// socket(io)
+
+
 
 app.listen(PORT, () => {
     console.log(`Server starts on ${PORT}...`);
