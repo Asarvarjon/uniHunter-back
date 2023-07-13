@@ -102,7 +102,7 @@ module.exports.profile_update = async (req, res) => {
         recommendations,
         hobbies
     } = req.body;
-    const user = await User.findById({_id: res.locals.user.id});
+    const user = await User.findById({_id: res.locals.user._id});
     user.set({
         uni_name, 
         city,
@@ -128,6 +128,6 @@ module.exports.profile_update = async (req, res) => {
 }
 
 module.exports.profile_get = async(req, res) => {
-    const userProfile = await User.findById({_id: res.locals.user.id});
+    const userProfile = await User.findById({_id: res.locals.user._id});
     res.send(userProfile);
 }
