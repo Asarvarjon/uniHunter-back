@@ -40,8 +40,22 @@ module.exports.signup_post = async (req, res) => {
         const company = await Company.create({
             email, password, name_of_company
         });
-        const token = createToken(company._id);
 
+        await Session.deleteMany({
+            owner_id: company._id,
+            user_agent: req.headers["user-agent"],
+        })
+  
+        const session = await Session.create({
+            owner_id: company._id,
+            user_agent: req.headers["user-agent"],
+        })
+
+        const token = createToken({
+            user_id: company._id,
+            session_id: session._id
+        });
+ 
         res.cookie('jwt', token, { httpOnly: true, maxDate });
         res.status(201).json({company: company._id});
     } catch(err) {
@@ -56,7 +70,21 @@ module.exports.login_post = async (req, res) => {
 
     try {
         const company = await Company.login(email, password);
-        const token = createToken(company._id);
+        await Session.deleteMany({
+            owner_id: company._id,
+            user_agent: req.headers["user-agent"],
+        })
+  
+        const session = await Session.create({
+            owner_id: company._id,
+            user_agent: req.headers["user-agent"],
+        })
+
+        const token = createToken({
+            user_id: company._id,
+            session_id: session._id
+        });
+ 
 
         res.cookie('jwt', token, { httpOnly: true, maxDate });
         res.status(200).json({company: company._id})
