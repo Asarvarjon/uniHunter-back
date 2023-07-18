@@ -4,8 +4,8 @@ const Session = require('../models/Session');
 
 const maxDate = 3 * 24 * 60 * 60;
 
-const createToken = id => {
-    return jwt.sign({id}, 'secret', {
+const createToken = (params) => {
+    return jwt.sign({...params}, 'secret', {
         expiresIn: maxDate
     })
 }
@@ -85,7 +85,7 @@ module.exports.login_post = async (req, res) => {
 
     try {
         const user = await User.login(email, password);
-        const token = createToken(user._id);
+       
 
         await Session.deleteMany({
             owner_id: user._id,
@@ -96,6 +96,13 @@ module.exports.login_post = async (req, res) => {
             owner_id: user._id,
             user_agent: req.headers["user-agent"],
         })
+
+        const token = createToken({
+            user_id: user._id,
+            session_id: session._id
+        });
+
+        console.log(session)
 
         res.cookie('jwt', token, { httpOnly: false, maxAge:maxDate });
         res.status(200).json({user: user._id})

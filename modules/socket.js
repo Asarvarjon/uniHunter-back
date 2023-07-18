@@ -1,6 +1,7 @@
 const Session = require("../models/Session")  
 const { isValidObjectId } = require("mongoose");
 const Message = require("../models/Message");
+const jwt = require('jsonwebtoken');
 
 
 module.exports = function handelSocket(io){
@@ -15,14 +16,17 @@ module.exports = function handelSocket(io){
     socket.on("new_connection", async data => {
         
         try { 
+            let parsed = JSON.parse(data)
+           
 
-            let token = await checkToken(data.token);
-
+            let token = await checkToken(parsed.token);
+          
             const user_session = await Session.findOneAndUpdate({
                 _id: token.session_id
             }, {
                 socket_id: socket.id
             })
+ 
 
             socket.emit("connected", {
                 ok: true
@@ -35,12 +39,17 @@ module.exports = function handelSocket(io){
 }
 
 function send_message_emitter(socket){
-    socket.on("send_message", async data => {
+    socket.on("send_message", async dataFromSocket => {
        const socket_session = await Session.findOne({
            socket_id: socket.id
        })  
 
+       let data = JSON.parse(dataFromSocket)
+       console.log(data)
+
         if(!socket_session) return;
+
+        console.log(socket_session, 'se')
 
         if(!(data.message_text && data.message_text.length >= 2 && data.message_text.length < 1024)) {
             return;
@@ -54,6 +63,8 @@ function send_message_emitter(socket){
             owner_id: socket_session.owner_id,
             receiver_id: data.receiver_id,
         }) 
+
+        console.log(chat)
 
 
         let receiver_sessions = await Session.find({
@@ -70,8 +81,9 @@ function send_message_emitter(socket){
 
 async function checkToken(token) {
     try {
-        return verify(token, 'secret');
+        return await jwt.verify(token, 'secret');
     } catch (error) {
+        console.log(error);
         return false
     }
 }
