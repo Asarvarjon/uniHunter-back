@@ -1,10 +1,11 @@
 const Company = require('../models/Company');
 const jwt = require('jsonwebtoken');
+const Session = require('../models/Session');
 
 const maxDate = 3 * 24 * 60 * 60;
 
-const createToken = id => {
-    return jwt.sign({id}, 'secret', {
+const createToken = (params) => {
+    return jwt.sign({...params}, 'secret', {
         expiresIn: maxDate
     })
 }
@@ -89,6 +90,7 @@ module.exports.login_post = async (req, res) => {
         res.cookie('jwt', token, { httpOnly: true, maxDate });
         res.status(200).json({company: company._id})
     } catch (err) {
+        console.log(err);
         const errors = handleErrors(err);
         res.status(400).json({errors});
     }
