@@ -10,36 +10,25 @@ module.exports.get_messages = async (req, res) =>{
 
             if(!isValid) throw new Error("Invalid")
 
-            const receiver_id = await User.findOne({
-                _id: req.params.id,
-            })
-
-            if(!receiver_id) throw new Error("User not found")
-
+            const receiver_id = req.params.id
+             
             const chats = await Message.find({
-                $o: [
-                    {
-                        $and: [
-                            {
-                                owner_id: res.locals.user._id
-                            },
-                            {
-                                receiver_id: receiver_id._id
-                            }
-                        ]
-                    },
-                    {
-                        $and: [
-                            {
-                                owner_id: receiver_id._id
-                            },
-                            {
-                                receiver_id: res.locals.user._id
-                            }
-                        ]
-                    }
-                ]
-            }).sort([["created_at", 1 ]])
+              $or: [
+                {
+                  $and: [
+                    { owner_id: res.locals.user._id },
+                    { receiver_id: receiver_id }
+                  ]
+                },
+                {
+                  $and: [
+                    { owner_id: receiver_id },
+                    { receiver_id: res.locals.user._id }
+                  ]
+                }
+              ]
+            }).sort([["created_at", 1]])
+            
  
  
 
