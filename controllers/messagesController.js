@@ -122,7 +122,7 @@ module.exports.get_user_chats = async (req, res) => {
       const chats = await Message.aggregate([
         {
           $match: {
-            owner_id: res.locals.company.id
+            owner_id: res.locals.company._id
           },
         },
         {
@@ -148,7 +148,7 @@ module.exports.get_user_chats = async (req, res) => {
   
       res.send(chats);
     } catch (error) {
-      console.log(error + "");
+      console.log(error);
       res.status(500).json({
         error: error + "",
       });

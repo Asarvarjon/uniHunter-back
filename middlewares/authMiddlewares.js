@@ -42,12 +42,16 @@ const checkUser = (req, res, next) => {
 const checkCompany = (req, res, next) => {
     const token = req.cookies.jwt;
 
+    console.log(token)
+
     if (token) {
         jwt.verify(token, 'secret', async (err, decodedToken) => {
             if (err) {
+                console.log(err)
                 res.locals.company = null;
                 next();
             } else {
+                console.log(decodedToken)
                 let company = await Company.findById(decodedToken.id);
                 res.locals.company = company;
                 next();

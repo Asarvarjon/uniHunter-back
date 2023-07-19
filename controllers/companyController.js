@@ -53,7 +53,7 @@ module.exports.signup_post = async (req, res) => {
         })
 
         const token = createToken({
-            user_id: company._id,
+            id: company._id, 
             session_id: session._id
         });
  
@@ -82,7 +82,7 @@ module.exports.login_post = async (req, res) => {
         })
 
         const token = createToken({
-            user_id: company._id,
+            id: company._id,
             session_id: session._id
         });
  
