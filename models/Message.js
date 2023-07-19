@@ -7,6 +7,9 @@ const MessagesSchema = new mongoose.Schema({
     } ,
     owner_id: {
         type: mongoose.Schema.Types.ObjectId,
+        populate: {
+            path: "owner", 
+        }
     
     }, 
     receiver_id: {

@@ -120,3 +120,15 @@ module.exports.profile_update = async (req, res) => {
 
     res.send({company})
 }
+
+
+
+module.exports.get_one_company = async(req, res) => {
+    const company = await Company.findById({_id: req.params.id});
+    res.send(company);
+}
+
+module.exports.get_all_companies = async(req, res) => {
+    const companies = await Company.find();
+    res.send(companies);
+}

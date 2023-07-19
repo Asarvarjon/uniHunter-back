@@ -165,3 +165,14 @@ module.exports.profile_get = async(req, res) => {
     const userProfile = await User.findById({_id: res.locals.user._id});
     res.send(userProfile);
 }
+
+
+module.exports.get_one_user = async(req, res) => {
+    const user = await User.findById({_id: req.params.id});
+    res.send(user);
+}
+
+module.exports.get_all_users = async(req, res) => {
+    const users = await User.find();
+    res.send(users);
+}

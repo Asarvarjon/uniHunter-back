@@ -12,6 +12,11 @@ router.get('/user/logout', authController.logout_get);
 
 router.put('/user/update-profile', requireAuth, checkUser, authController.profile_update);
 router.get('/user/profile', requireAuth, checkUser, authController.profile_get);
+router.get('/users', requireAuth, checkUser, authController.get_all_users);
+
+router.get('/user/:id', requireAuth, checkUser, authController.get_one_user);
+
+
 
 
 module.exports = router;

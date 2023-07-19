@@ -21,7 +21,7 @@ module.exports.get_messages = async (req, res) =>{
                     {
                         $and: [
                             {
-                                owner_id: req.user._id
+                                owner_id: res.locals.user._id
                             },
                             {
                                 receiver_id: receiver_id._id
@@ -34,7 +34,7 @@ module.exports.get_messages = async (req, res) =>{
                                 owner_id: receiver_id._id
                             },
                             {
-                                receiver_id: req.user._id
+                                receiver_id: res.locals.user._id
                             }
                         ]
                     }
@@ -54,12 +54,12 @@ module.exports.get_messages = async (req, res) =>{
 module.exports.post_messages = async (req, res) =>{
         try { 
 
-            if(!(isValidObjectId(req.user._id) && isValidObjectId(req.params?.id))) throw new Error("Id is invalid!")
+            if(!(isValidObjectId(res.locals.user._id) && isValidObjectId(req.params?.id))) throw new Error("Id is invalid!")
 
 
             const chat = await messages.create({
                 message_text: message_text,
-                owner_id: req.user._id,
+                owner_id:res.locals.user._id,
                 receiver_id: req.params.id,
             })
  
@@ -75,3 +75,82 @@ module.exports.post_messages = async (req, res) =>{
             })
         }
 } 
+
+
+module.exports.get_user_chats = async (req, res) => {
+    try { 
+  
+      const chats = await Message.aggregate([
+        {
+          $match: {
+            owner_id: res.locals.user._id
+          },
+        },
+        {
+          $group: {
+            _id: {
+              owner_id: "$owner_id",
+              receiver_id: "$receiver_id",
+            },
+            last_message: {
+              $last: "$message_text",
+            },
+            created_at: {
+              $last: "$created_at",
+            },
+          },
+        },
+        {
+          $sort: {
+            created_at: -1,
+          },
+        },
+      ]);
+  
+      res.send(chats);
+    } catch (error) {
+      console.log(error + "");
+      res.status(500).json({
+        error: error + "",
+      });
+    }
+  };  
+
+  module.exports.get_company_chats = async (req, res) => {
+    try { 
+  
+      const chats = await Message.aggregate([
+        {
+          $match: {
+            owner_id: res.locals.company.id
+          },
+        },
+        {
+          $group: {
+            _id: {
+              owner_id: "$owner_id",
+              receiver_id: "$receiver_id",
+            },
+            last_message: {
+              $last: "$message_text",
+            },
+            created_at: {
+              $last: "$created_at",
+            },
+          },
+        },
+        {
+          $sort: {
+            created_at: -1,
+          },
+        },
+      ]);
+  
+      res.send(chats);
+    } catch (error) {
+      console.log(error + "");
+      res.status(500).json({
+        error: error + "",
+      });
+    }
+  }; 
